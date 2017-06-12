@@ -40,13 +40,17 @@ public class EndGameState extends State{
         bitmapFontEndGame = new BitmapFont(Gdx.files.internal("endgamefont.fnt"),Gdx.files.internal("endgamefont.png"),false);
         bitmapFontEndGameInfo = new BitmapFont(Gdx.files.internal("endgameinfofont.fnt"),Gdx.files.internal("endgameinfofont.png"),false);
         this.points = points;
-
-        Preferences prefs = Gdx.app.getPreferences("pref1");
-        record = prefs.getInteger("record"+Integer.toString(mode),0);
+        
+        FileInputStream fis = new FileInputStream("temp.out");
+        ObjectInputStream oin = new ObjectInputStream(fis);
+        Record record = (Record) oin.readObject();
         if(record < points) {
-            prefs.putInteger("record" + Integer.toString(mode), points);
-            RECORD_Y = 300;
-            prefs.flush();
+            FileOutputStream fos = new FileOutputStream("temp.out");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            TestSerial ts = new TestSerial();
+            oos.writeObject(points);
+            oos.flush();
+            oos.close();
         }
         else
         {
